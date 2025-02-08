@@ -11,12 +11,15 @@
             font-family: 'Courier New', monospace;
             text-align: center;
             margin: 50px;
+            transition: background-color 1s ease-in-out;
         }
         #game-container {
             border: 2px solid cyan;
             padding: 20px;
             width: 60%;
             margin: auto;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
         }
         .choice {
             background-color: transparent;
@@ -26,20 +29,34 @@
             margin: 5px;
             cursor: pointer;
         }
+        #inventory {
+            margin-top: 20px;
+            border: 2px solid cyan;
+            padding: 10px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
     <h1>Time Traveler's Dilemma</h1>
+    <audio id="time-travel-sound" src="https://www.fesliyanstudios.com/play-mp3/4383" preload="auto"></audio>
+    <audio id="glitch-sound" src="https://www.fesliyanstudios.com/play-mp3/4225" preload="auto"></audio>
+
     <div id="game-container">
         <p id="story">Year: 2150. The world’s greatest inventor, Elias Voss, has vanished. You must travel back to 2025 to find out why.</p>
         <button class="choice" onclick="makeChoice('travel')">Activate Time Machine</button>
     </div>
 
     <p>Time Remaining: <span id="timer">60</span> seconds</p>
+    <div id="inventory">
+        <h3>Inventory</h3>
+        <ul id="inventory-list"></ul>
+    </div>
 
     <script>
         let timeLeft = 60;
+        let inventory = [];
 
         function countdown() {
             if (timeLeft > 0) {
@@ -51,8 +68,21 @@
             }
         }
 
+        function transitionScene() {
+            document.getElementById("game-container").style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById("game-container").style.opacity = "1";
+            }, 1000);
+        }
+
+        function playSound(effect) {
+            document.getElementById(effect).play();
+        }
+
         function makeChoice(choice) {
+            transitionScene();
             if (choice === "travel") {
+                playSound("time-travel-sound");
                 document.getElementById("story").innerText = "You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?";
                 document.getElementById("game-container").innerHTML = `
                     <p>You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?</p>
@@ -60,9 +90,20 @@
                     <button class="choice" onclick="makeChoice('search')">Search for clues</button>
                 `;
             } else if (choice === "hack") {
+                playSound("glitch-sound");
                 document.getElementById("game-container").innerHTML = "<p>You hack the door, but alarms go off. Time is running out!</p>";
             } else if (choice === "search") {
                 document.getElementById("game-container").innerHTML = "<p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>";
+                addToInventory("Mysterious Newspaper");
+            }
+        }
+
+        function addToInventory(item) {
+            if (!inventory.includes(item)) {
+                inventory.push(item);
+                let listItem = document.createElement("li");
+                listItem.innerText = item;
+                document.getElementById("inventory-list").appendChild(listItem);
             }
         }
 
