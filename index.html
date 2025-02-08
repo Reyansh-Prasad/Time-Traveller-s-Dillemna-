@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Traveler's Dilemma</title>
+    <style>
+        body {
+            background-color: black;
+            color: cyan;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 50px;
+        }
+        #game-container {
+            border: 2px solid cyan;
+            padding: 20px;
+            width: 60%;
+            margin: auto;
+        }
+        .choice {
+            background-color: transparent;
+            color: cyan;
+            border: 1px solid cyan;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Time Traveler's Dilemma</h1>
+    <div id="game-container">
+        <p id="story">Year: 2150. The world’s greatest inventor, Elias Voss, has vanished. You must travel back to 2025 to find out why.</p>
+        <button class="choice" onclick="makeChoice('travel')">Activate Time Machine</button>
+    </div>
+
+    <p>Time Remaining: <span id="timer">60</span> seconds</p>
+
+    <script>
+        let timeLeft = 60;
+
+        function countdown() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById("timer").innerText = timeLeft;
+                setTimeout(countdown, 1000);
+            } else {
+                document.getElementById("game-container").innerHTML = "<p>You ran out of time! The timeline is locked forever.</p>";
+            }
+        }
+
+        function makeChoice(choice) {
+            if (choice === "travel") {
+                document.getElementById("story").innerText = "You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?";
+                document.getElementById("game-container").innerHTML = `
+                    <p>You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?</p>
+                    <button class="choice" onclick="makeChoice('hack')">Hack the door</button>
+                    <button class="choice" onclick="makeChoice('search')">Search for clues</button>
+                `;
+            } else if (choice === "hack") {
+                document.getElementById("game-container").innerHTML = "<p>You hack the door, but alarms go off. Time is running out!</p>";
+            } else if (choice === "search") {
+                document.getElementById("game-container").innerHTML = "<p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>";
+            }
+        }
+
+        countdown();
+    </script>
+
+</body>
+</html>
