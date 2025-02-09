@@ -57,7 +57,7 @@
     <script>
         let timeLeft = 60;
         let inventory = [];
-        let lastLocation = "start";
+        let historyStack = [];
 
         function countdown() {
             if (timeLeft > 0) {
@@ -82,34 +82,34 @@
 
         function makeChoice(choice) {
             transitionScene();
-            lastLocation = choice;
+            historyStack.push(choice); // Store the previous location
 
             if (choice === "travel") {
                 playSound("time-travel-sound");
-                document.getElementById("story").innerText = "You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?";
                 document.getElementById("game-container").innerHTML = `
                     <p>You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?</p>
                     <button class="choice" onclick="makeChoice('hack')">Hack the door</button>
                     <button class="choice" onclick="makeChoice('search')">Search for clues</button>
+                    <button class="choice" onclick="makeChoice('travelToFuture')">Travel to 2300</button>
                 `;
             } else if (choice === "hack") {
                 playSound("glitch-sound");
                 document.getElementById("game-container").innerHTML = `
                     <p>You hack the door, but alarms go off. You need a keycard to bypass security.</p>
                     <button class="choice" onclick="useItem('Keycard')">Use Keycard</button>
-                    <button class="choice" onclick="makeChoice('back')">Go Back</button>
+                    <button class="choice" onclick="goBack()">Go Back</button>
                 `;
             } else if (choice === "search") {
                 document.getElementById("game-container").innerHTML = `
                     <p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>
                     <button class="choice" onclick="makeChoice('searchAgain')">Keep Searching</button>
-                    <button class="choice" onclick="makeChoice('back')">Go Back</button>
+                    <button class="choice" onclick="goBack()">Go Back</button>
                 `;
                 addToInventory("Mysterious Newspaper");
             } else if (choice === "searchAgain") {
                 document.getElementById("game-container").innerHTML = `
                     <p>You find a Keycard hidden in a drawer!</p>
-                    <button class="choice" onclick="makeChoice('back')">Go Back</button>
+                    <button class="choice" onclick="goBack()">Go Back</button>
                 `;
                 addToInventory("Keycard");
             } else if (choice === "useKeycard") {
@@ -118,6 +118,24 @@
                     <button class="choice" onclick="makeChoice('restore')">Restore Elias</button>
                     <button class="choice" onclick="makeChoice('replace')">Take His Place</button>
                     <button class="choice" onclick="makeChoice('destroy')">Destroy Time</button>
+                `;
+            } else if (choice === "travelToFuture") {
+                playSound("time-travel-sound");
+                document.getElementById("game-container").innerHTML = `
+                    <p>You travel to the year 2300. The world is ruled by AI overlords. A cyborg resistance needs your help.</p>
+                    <button class="choice" onclick="makeChoice('helpResistance')">Help the Resistance</button>
+                    <button class="choice" onclick="makeChoice('sideWithAI')">Join the AI</button>
+                    <button class="choice" onclick="goBack()">Go Back</button>
+                `;
+            } else if (choice === "helpResistance") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You lead a rebellion against the AI. You find a hidden blueprint that may hold the secret to time restoration.</p>
+                    <button class="choice" onclick="goBack()">Go Back</button>
+                `;
+                addToInventory("Blueprint");
+            } else if (choice === "sideWithAI") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You embrace AI rule. The world enters an age of technological prosperity, but humanity is no longer in control.</p>
                 `;
             } else if (choice === "restore") {
                 document.getElementById("game-container").innerHTML = `
@@ -131,8 +149,13 @@
                 document.getElementById("game-container").innerHTML = `
                     <p>You destroy time itself. The universe collapses into chaos.</p>
                 `;
-            } else if (choice === "back") {
-                makeChoice(lastLocation);
+            }
+        }
+
+        function goBack() {
+            if (historyStack.length > 1) {
+                historyStack.pop(); // Remove current choice
+                makeChoice(historyStack.pop()); // Go back to the previous choice
             }
         }
 
@@ -142,14 +165,6 @@
                 let listItem = document.createElement("li");
                 listItem.innerText = item;
                 document.getElementById("inventory-list").appendChild(listItem);
-            }
-        }
-
-        function useItem(item) {
-            if (inventory.includes(item)) {
-                makeChoice("useKeycard");
-            } else {
-                alert("You don't have that item!");
             }
         }
 
