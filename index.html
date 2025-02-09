@@ -82,7 +82,7 @@
 
         function makeChoice(choice) {
             transitionScene();
-            historyStack.push(choice); // Store the previous location
+            historyStack.push(choice);
 
             if (choice === "travel") {
                 playSound("time-travel-sound");
@@ -90,64 +90,48 @@
                     <p>You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?</p>
                     <button class="choice" onclick="makeChoice('hack')">Hack the door</button>
                     <button class="choice" onclick="makeChoice('search')">Search for clues</button>
-                    <button class="choice" onclick="makeChoice('travelToFuture')">Travel to 2300</button>
+                    <button class="choice" onclick="makeChoice('travelTo1300s')">Travel to 1300s</button>
                 `;
-            } else if (choice === "hack") {
-                playSound("glitch-sound");
-                let keycardExists = inventory.includes("Keycard");
-
-                document.getElementById("game-container").innerHTML = `
-                    <p>You hack the door, but alarms go off. You need a keycard to bypass security.</p>
-                    ${keycardExists ? `<button class="choice" onclick="makeChoice('useKeycard')">Use Keycard</button>` : ""}
-                    <button class="choice" onclick="goBack()">Go Back</button>
-                `;
-            } else if (choice === "search") {
-                document.getElementById("game-container").innerHTML = `
-                    <p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>
-                    <button class="choice" onclick="makeChoice('searchAgain')">Keep Searching</button>
-                    <button class="choice" onclick="goBack()">Go Back</button>
-                `;
-                addToInventory("Mysterious Newspaper");
-            } else if (choice === "searchAgain") {
-                document.getElementById("game-container").innerHTML = `
-                    <p>You find a Keycard hidden in a drawer!</p>
-                    <button class="choice" onclick="goBack()">Go Back</button>
-                `;
-                addToInventory("Keycard");
-            } else if (choice === "useKeycard") {
-                document.getElementById("game-container").innerHTML = `
-                    <p>You unlock the lab! Inside, you find Elias Voss's time device. Do you restore him, take his place, or destroy time?</p>
-                    <button class="choice" onclick="makeChoice('restore')">Restore Elias</button>
-                    <button class="choice" onclick="makeChoice('replace')">Take His Place</button>
-                    <button class="choice" onclick="makeChoice('destroy')">Destroy Time</button>
-                `;
-            } else if (choice === "travelToFuture") {
+            } else if (choice === "travelTo1300s") {
                 playSound("time-travel-sound");
                 document.getElementById("game-container").innerHTML = `
-                    <p>You travel to the year 2300. The world is ruled by AI overlords. A cyborg resistance needs your help.</p>
-                    <button class="choice" onclick="makeChoice('helpResistance')">Help the Resistance</button>
-                    <button class="choice" onclick="makeChoice('sideWithAI')">Join the AI</button>
+                    <p>You travel to the 1300s. A hidden alchemist’s lab contains a mysterious formula.</p>
+                    <button class="choice" onclick="makeChoice('decodeFormula')">Decode the formula</button>
                     <button class="choice" onclick="goBack()">Go Back</button>
                 `;
-            } else if (choice === "helpResistance") {
+            } else if (choice === "decodeFormula") {
                 document.getElementById("game-container").innerHTML = `
-                    <p>You lead a rebellion against the AI. You find a hidden blueprint that may hold the secret to time restoration.</p>
+                    <p>The formula is written in an ancient cipher. Can you solve it?</p>
+                    <button class="choice" onclick="makeChoice('solveCipher')">Try to decode</button>
                     <button class="choice" onclick="goBack()">Go Back</button>
                 `;
-                addToInventory("Blueprint");
+                addToInventory("Ancient Formula");
+            } else if (choice === "solveCipher") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You successfully decode the formula! It reveals a hidden timeline.</p>
+                    <button class="choice" onclick="makeChoice('unlockHiddenEnding')">Travel to Unknown Timeline</button>
+                    <button class="choice" onclick="goBack()">Go Back</button>
+                `;
+            } else if (choice === "unlockHiddenEnding") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You uncover the truth: Elias Voss erased himself to prevent a paradox. What do you do?</p>
+                    <button class="choice" onclick="makeChoice('restore')">Restore Elias</button>
+                    <button class="choice" onclick="makeChoice('preserve')">Keep the secret</button>
+                    <button class="choice" onclick="makeChoice('rewrite')">Rewrite history</button>
+                `;
             } else if (choice === "restore") {
                 document.getElementById("game-container").innerHTML = `<p>You restore Elias Voss. The timeline is saved!</p>`;
-            } else if (choice === "replace") {
-                document.getElementById("game-container").innerHTML = `<p>You take Elias Voss's place. History is rewritten!</p>`;
-            } else if (choice === "destroy") {
-                document.getElementById("game-container").innerHTML = `<p>You destroy time itself. The universe collapses into chaos.</p>`;
+            } else if (choice === "preserve") {
+                document.getElementById("game-container").innerHTML = `<p>You let the timeline remain unchanged. No one ever knows the truth.</p>`;
+            } else if (choice === "rewrite") {
+                document.getElementById("game-container").innerHTML = `<p>You take control of time itself. Reality is now yours to shape.</p>`;
             }
         }
 
         function goBack() {
             if (historyStack.length > 1) {
-                historyStack.pop(); // Remove current choice
-                makeChoice(historyStack.pop()); // Go back to the previous choice
+                historyStack.pop();
+                makeChoice(historyStack.pop());
             }
         }
 
