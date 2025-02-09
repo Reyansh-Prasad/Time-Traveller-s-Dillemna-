@@ -5,14 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Traveler's Dilemma</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: black; color: white; text-align: center; }
-        #game-container { max-width: 600px; margin: auto; padding: 20px; border: 2px solid white; background: rgba(255,255,255,0.1); }
-        button { background: purple; color: white; padding: 10px; border: none; margin: 5px; cursor: pointer; }
-        button:hover { background: darkviolet; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+
+        /* Animated Background */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Game Container */
+        #game-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid cyan;
+            box-shadow: 0px 0px 10px cyan;
+            border-radius: 10px;
+            margin-top: 100px;
+        }
+
+        /* Styled Buttons */
+        button {
+            background: linear-gradient(90deg, cyan, blue);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, blue, cyan);
+            box-shadow: 0px 0px 10px cyan;
+        }
     </style>
 </head>
 <body>
-    <h1>The Time Traveler's Dilemma</h1>
+
+    <!-- Animated Background -->
+    <canvas id="stars"></canvas>
+
+    <h1 style="text-shadow: 0px 0px 10px cyan;">The Time Traveler's Dilemma</h1>
     <div id="game-container">
         <p>Welcome, traveler! You must uncover the truth behind Elias Voss's disappearance.</p>
         <button onclick="makeChoice('start')">Start</button>
@@ -92,6 +143,53 @@
                 `;
             }
         }
+
+        // Background Animation (Stars)
+        const canvas = document.getElementById("stars");
+        const ctx = canvas.getContext("2d");
+        let stars = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createStars() {
+            stars = [];
+            for (let i = 0; i < 100; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2,
+                    speed: Math.random() * 2
+                });
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+                star.y += star.speed;
+                if (star.y > canvas.height) star.y = 0;
+            });
+
+            requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener("resize", () => {
+            resizeCanvas();
+            createStars();
+        });
+
+        resizeCanvas();
+        createStars();
+        animateStars();
     </script>
+
 </body>
 </html>
