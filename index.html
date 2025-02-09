@@ -57,6 +57,7 @@
     <script>
         let timeLeft = 60;
         let inventory = [];
+        let lastLocation = "start";
 
         function countdown() {
             if (timeLeft > 0) {
@@ -81,6 +82,8 @@
 
         function makeChoice(choice) {
             transitionScene();
+            lastLocation = choice;
+
             if (choice === "travel") {
                 playSound("time-travel-sound");
                 document.getElementById("story").innerText = "You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?";
@@ -94,16 +97,19 @@
                 document.getElementById("game-container").innerHTML = `
                     <p>You hack the door, but alarms go off. You need a keycard to bypass security.</p>
                     <button class="choice" onclick="useItem('Keycard')">Use Keycard</button>
+                    <button class="choice" onclick="makeChoice('back')">Go Back</button>
                 `;
             } else if (choice === "search") {
                 document.getElementById("game-container").innerHTML = `
                     <p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>
                     <button class="choice" onclick="makeChoice('searchAgain')">Keep Searching</button>
+                    <button class="choice" onclick="makeChoice('back')">Go Back</button>
                 `;
                 addToInventory("Mysterious Newspaper");
             } else if (choice === "searchAgain") {
                 document.getElementById("game-container").innerHTML = `
                     <p>You find a Keycard hidden in a drawer!</p>
+                    <button class="choice" onclick="makeChoice('back')">Go Back</button>
                 `;
                 addToInventory("Keycard");
             } else if (choice === "useKeycard") {
@@ -125,6 +131,8 @@
                 document.getElementById("game-container").innerHTML = `
                     <p>You destroy time itself. The universe collapses into chaos.</p>
                 `;
+            } else if (choice === "back") {
+                makeChoice(lastLocation);
             }
         }
 
