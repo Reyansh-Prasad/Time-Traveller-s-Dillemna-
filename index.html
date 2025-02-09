@@ -5,147 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Traveler's Dilemma</title>
     <style>
-        body {
-            background-color: black;
-            color: cyan;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            margin: 50px;
-            transition: background-color 1s ease-in-out;
-        }
-        #game-container {
-            border: 2px solid cyan;
-            padding: 20px;
-            width: 60%;
-            margin: auto;
-            opacity: 1;
-            transition: opacity 1s ease-in-out;
-        }
-        .choice {
-            background-color: transparent;
-            color: cyan;
-            border: 1px solid cyan;
-            padding: 10px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        #inventory {
-            margin-top: 20px;
-            border: 2px solid cyan;
-            padding: 10px;
-            display: inline-block;
-        }
+        body { font-family: Arial, sans-serif; background-color: black; color: white; text-align: center; }
+        #game-container { max-width: 600px; margin: auto; padding: 20px; border: 2px solid white; background: rgba(255,255,255,0.1); }
+        button { background: purple; color: white; padding: 10px; border: none; margin: 5px; cursor: pointer; }
+        button:hover { background: darkviolet; }
     </style>
 </head>
 <body>
-
-    <h1>Time Traveler's Dilemma</h1>
-    <audio id="time-travel-sound" src="https://www.fesliyanstudios.com/play-mp3/4383" preload="auto"></audio>
-    <audio id="glitch-sound" src="https://www.fesliyanstudios.com/play-mp3/4225" preload="auto"></audio>
-
+    <h1>The Time Traveler's Dilemma</h1>
     <div id="game-container">
-        <p id="story">Year: 2150. The world’s greatest inventor, Elias Voss, has vanished. You must travel back to 2025 to find out why.</p>
-        <button class="choice" onclick="makeChoice('travel')">Activate Time Machine</button>
+        <p>Welcome, traveler! You must uncover the truth behind Elias Voss's disappearance.</p>
+        <button onclick="makeChoice('start')">Start</button>
     </div>
-
-    <p>Time Remaining: <span id="timer">60</span> seconds</p>
-    <div id="inventory">
-        <h3>Inventory</h3>
-        <ul id="inventory-list"></ul>
-    </div>
-
-    <script>
-        let timeLeft = 60;
-        let inventory = [];
-        let historyStack = [];
-
-        function countdown() {
-            if (timeLeft > 0) {
-                timeLeft--;
-                document.getElementById("timer").innerText = timeLeft;
-                setTimeout(countdown, 1000);
-            } else {
-                document.getElementById("game-container").innerHTML = "<p>You ran out of time! The timeline is locked forever.</p>";
-            }
-        }
-
-        function transitionScene() {
-            document.getElementById("game-container").style.opacity = "0";
-            setTimeout(() => {
-                document.getElementById("game-container").style.opacity = "1";
-            }, 1000);
-        }
-
-        function playSound(effect) {
-            document.getElementById(effect).play();
-        }
-
-        function makeChoice(choice) {
-            transitionScene();
-            historyStack.push(choice);
-
-            if (choice === "travel") {
-                playSound("time-travel-sound");
-                document.getElementById("game-container").innerHTML = `
-                    <p>You arrive in 2025. Elias Voss is missing. His lab is locked. What do you do?</p>
-                    <button class="choice" onclick="makeChoice('hack')">Hack the door</button>
-                    <button class="choice" onclick="makeChoice('search')">Search for clues</button>
-                    <button class="choice" onclick="makeChoice('travelTo1300s')">Travel to 1300s</button>
-                `;
-            } else if (choice === "travelTo1300s") {
-                playSound("time-travel-sound");
-                document.getElementById("game-container").innerHTML = `
-                    <p>You travel to the 1300s. A hidden alchemist’s lab contains a mysterious formula.</p>
-                    <button class="choice" onclick="makeChoice('decodeFormula')">Decode the formula</button>
-                    <button class="choice" onclick="goBack()">Go Back</button>
-                `;
-            } else if (choice === "decodeFormula") {
-                document.getElementById("game-container").innerHTML = `
-                    <p>The formula is written in an ancient cipher. Can you solve it?</p>
-                    <button class="choice" onclick="makeChoice('solveCipher')">Try to decode</button>
-                    <button class="choice" onclick="goBack()">Go Back</button>
-                `;
-                addToInventory("Ancient Formula");
-            } else if (choice === "solveCipher") {
-                document.getElementById("game-container").innerHTML = `
-                    <p>You successfully decode the formula! It reveals a hidden timeline.</p>
-                    <button class="choice" onclick="makeChoice('unlockHiddenEnding')">Travel to Unknown Timeline</button>
-                    <button class="choice" onclick="goBack()">Go Back</button>
-                `;
-            } else if (choice === "unlockHiddenEnding") {
-                document.getElementById("game-container").innerHTML = `
-                    <p>You uncover the truth: Elias Voss erased himself to prevent a paradox. What do you do?</p>
-                    <button class="choice" onclick="makeChoice('restore')">Restore Elias</button>
-                    <button class="choice" onclick="makeChoice('preserve')">Keep the secret</button>
-                    <button class="choice" onclick="makeChoice('rewrite')">Rewrite history</button>
-                `;
-            } else if (choice === "restore") {
-                document.getElementById("game-container").innerHTML = `<p>You restore Elias Voss. The timeline is saved!</p>`;
-            } else if (choice === "preserve") {
-                document.getElementById("game-container").innerHTML = `<p>You let the timeline remain unchanged. No one ever knows the truth.</p>`;
-            } else if (choice === "rewrite") {
-                document.getElementById("game-container").innerHTML = `<p>You take control of time itself. Reality is now yours to shape.</p>`;
-            }
-        }
-
-        function goBack() {
-            if (historyStack.length > 1) {
-                historyStack.pop();
-                makeChoice(historyStack.pop());
-            }
-        }
-
-        function addToInventory(item) {
-            if (!inventory.includes(item)) {
-                inventory.push(item);
-                let listItem = document.createElement("li");
-                listItem.innerText = item;
-                document.getElementById("inventory-list").appendChild(listItem);
-            }
-        }
-
-        countdown();
-    </script>
-
+    <script src="game.js"></script>
 </body>
 </html>
