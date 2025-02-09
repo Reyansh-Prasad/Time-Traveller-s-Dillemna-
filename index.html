@@ -91,10 +91,40 @@
                 `;
             } else if (choice === "hack") {
                 playSound("glitch-sound");
-                document.getElementById("game-container").innerHTML = "<p>You hack the door, but alarms go off. Time is running out!</p>";
+                document.getElementById("game-container").innerHTML = `
+                    <p>You hack the door, but alarms go off. You need a keycard to bypass security.</p>
+                    <button class="choice" onclick="useItem('Keycard')">Use Keycard</button>
+                `;
             } else if (choice === "search") {
-                document.getElementById("game-container").innerHTML = "<p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>";
+                document.getElementById("game-container").innerHTML = `
+                    <p>You find a newspaper. It says Elias Voss was last seen meeting a mysterious stranger...</p>
+                    <button class="choice" onclick="makeChoice('searchAgain')">Keep Searching</button>
+                `;
                 addToInventory("Mysterious Newspaper");
+            } else if (choice === "searchAgain") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You find a Keycard hidden in a drawer!</p>
+                `;
+                addToInventory("Keycard");
+            } else if (choice === "useKeycard") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You unlock the lab! Inside, you find Elias Voss's time device. Do you restore him, take his place, or destroy time?</p>
+                    <button class="choice" onclick="makeChoice('restore')">Restore Elias</button>
+                    <button class="choice" onclick="makeChoice('replace')">Take His Place</button>
+                    <button class="choice" onclick="makeChoice('destroy')">Destroy Time</button>
+                `;
+            } else if (choice === "restore") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You restore Elias Voss. The timeline is saved!</p>
+                `;
+            } else if (choice === "replace") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You take Elias Voss's place. History is rewritten, and you become the greatest inventor!</p>
+                `;
+            } else if (choice === "destroy") {
+                document.getElementById("game-container").innerHTML = `
+                    <p>You destroy time itself. The universe collapses into chaos.</p>
+                `;
             }
         }
 
@@ -104,6 +134,14 @@
                 let listItem = document.createElement("li");
                 listItem.innerText = item;
                 document.getElementById("inventory-list").appendChild(listItem);
+            }
+        }
+
+        function useItem(item) {
+            if (inventory.includes(item)) {
+                makeChoice("useKeycard");
+            } else {
+                alert("You don't have that item!");
             }
         }
 
