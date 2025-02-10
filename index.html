@@ -16,7 +16,6 @@
             background: black;
         }
 
-        /* Animated Background */
         canvas {
             position: fixed;
             top: 0;
@@ -26,7 +25,6 @@
             z-index: -1;
         }
 
-        /* Game Container */
         #game-container {
             max-width: 600px;
             margin: auto;
@@ -38,7 +36,6 @@
             margin-top: 100px;
         }
 
-        /* Styled Buttons */
         button {
             background: linear-gradient(90deg, cyan, blue);
             color: white;
@@ -56,14 +53,48 @@
             background: linear-gradient(90deg, blue, cyan);
             box-shadow: 0px 0px 10px cyan;
         }
+
+        input {
+            background: black;
+            border: 1px solid cyan;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+        }
+
+        .glitch {
+            animation: glitchEffect 0.1s infinite;
+        }
+
+        @keyframes glitchEffect {
+            0% { transform: translateX(2px) skewX(5deg); }
+            25% { transform: translateX(-3px) skewX(-7deg); }
+            50% { transform: translateX(4px) skewX(5deg); }
+            75% { transform: translateX(-5px) skewX(-6deg); }
+            100% { transform: translateX(2px) skewX(5deg); }
+        }
+
+        .flicker {
+            animation: flickerEffect 0.1s infinite;
+        }
+
+        @keyframes flickerEffect {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .neon {
+            text-shadow: 0px 0px 10px cyan, 0px 0px 20px cyan, 0px 0px 30px cyan;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Animated Background -->
     <canvas id="stars"></canvas>
 
-    <h1 style="text-shadow: 0px 0px 10px cyan;">The Time Traveler's Dilemma</h1>
+    <h1 class="neon" style="text-shadow: 0px 0px 10px cyan;">The Time Traveler's Dilemma</h1>
     <div id="game-container">
         <p>Welcome, traveler! You must uncover the truth behind Elias Voss's disappearance.</p>
         <button onclick="makeChoice('start')">Start</button>
@@ -80,18 +111,16 @@
         function makeChoice(choice) {
             if (choice === "start") {
                 document.getElementById("game-container").innerHTML = `
-                    <p>You stand before Elias Voss’s abandoned lab. The entrance is blocked by a laser grid.</p>
-                    <button onclick="makeChoice('laserSecurity')">Disable Laser Security</button>
+                    <p>You stand before Elias Voss’s abandoned lab. The entrance is blocked by a locked security panel.</p>
+                    <button onclick="makeChoice('hackSecurity')">Hack the Security Panel</button>
                     <button onclick="makeChoice('travelToGreece')">Travel to Ancient Greece (400 BC)</button>
                 `;
-            } else if (choice === "laserSecurity") {
-                playSound("alarm.mp3");
+            } else if (choice === "hackSecurity") {
+                playSound("beep.mp3");
                 document.getElementById("game-container").innerHTML = `
-                    <p>The lab is protected by moving laser beams! You must realign the circuits to disable them.</p>
-                    <p>Which wire should you cut first?</p>
-                    <button onclick="checkLaserSolution('red')">Red Wire</button>
-                    <button onclick="checkLaserSolution('blue')">Blue Wire</button>
-                    <button onclick="checkLaserSolution('green')">Green Wire</button>
+                    <p>The security panel asks for a **4-digit passcode.**</p>
+                    <input type="text" id="passcode" maxlength="4" placeholder="Enter Code">
+                    <button onclick="checkHackCode()">Submit</button>
                 `;
             } else if (choice === "travelToGreece") {
                 playSound("time-travel.mp3");
@@ -112,19 +141,22 @@
             }
         }
 
-        function checkLaserSolution(wire) {
-            if (wire === "blue") {
+        function checkHackCode() {
+            let code = document.getElementById("passcode").value;
+            if (code === "2047") {
                 playSound("success.mp3");
                 document.getElementById("game-container").innerHTML = `
-                    <p>You cut the blue wire, and the lasers deactivate! You can now enter.</p>
+                    <p>Access Granted! The lab door unlocks.</p>
                     <button onclick="makeChoice('enterLab')">Enter the Lab</button>
                 `;
             } else {
-                playSound("alarm.mp3");
-                document.getElementById("game-container").innerHTML = `
-                    <p>Wrong wire! The alarm blares, and you must escape before security arrives.</p>
-                    <button onclick="makeChoice('start')">Run Away</button>
-                `;
+                playSound("static.mp3");
+                document.getElementById("game-container").classList.add("glitch");
+                document.getElementById("game-container").classList.add("flicker");
+                setTimeout(() => {
+                    document.getElementById("game-container").classList.remove("glitch");
+                    document.getElementById("game-container").classList.remove("flicker");
+                }, 1000);
             }
         }
 
@@ -144,7 +176,6 @@
             }
         }
 
-        // Background Animation (Stars)
         const canvas = document.getElementById("stars");
         const ctx = canvas.getContext("2d");
         let stars = [];
