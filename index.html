@@ -31,7 +31,7 @@
             padding: 20px;
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid cyan;
-            box-shadow: 0px 0px 10px cyan;
+            box-shadow: 0px 0px 15px cyan;
             border-radius: 10px;
             margin-top: 100px;
         }
@@ -47,11 +47,13 @@
             transition: 0.3s;
             border-radius: 5px;
             font-family: 'Orbitron', sans-serif;
+            text-shadow: 0px 0px 8px cyan;
+            box-shadow: 0px 0px 10px cyan;
         }
 
         button:hover {
             background: linear-gradient(90deg, blue, cyan);
-            box-shadow: 0px 0px 10px cyan;
+            box-shadow: 0px 0px 20px cyan;
         }
 
         input {
@@ -225,6 +227,16 @@
         }
 
         startGame();
+
+        const canvas = document.getElementById("stars");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
     </script>
 
 </body>
